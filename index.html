@@ -8,15 +8,15 @@
 <h1>Simple REST Client</h1>
 
 <form onSubmit='restRequest(event, this)'>
-  <label>Type:
+  <label>
     <select id='requestType'>
       <option value='GET'>get</option>
       <option value='POST'>create/post</option>
       <option value='PUT'>update/put</option>
       <option value='DELETE'>delete</option>
     </select>
+    <input id='requestUrl'/>
   </label>
-  <label>URL:<input id='requestUrl'/></label>
   <label>Body:<br/><textarea id='requestBody'></textarea></label>
   <button type='submit'>Submit</button>
 </form>
@@ -26,6 +26,18 @@
 <style type='text/css'>
   body {
     font-family: sans-serif;
+    background-color: whitesmoke;
+    text-align: center;
+    margin: 0.5em auto;
+    width: 80%;
+    max-width: 400px;
+  }
+
+  @media only screen and (max-width: 480px) {
+    body {
+      width: 90%;
+      max-width: none;
+    }
   }
 
   button, input, textarea, select {
@@ -34,15 +46,19 @@
 
   button {
     cursor: pointer;
-    padding: 0.5em 1em;
+    padding: 0.7em 1.4em;
     background-color: dodgerblue;
     color: white;
     border: none;
     border-radius: 0.25em;
   }
+  button:hover {
+    opacity: 0.8;
+  }
 
   textarea {
-    height: 10em;
+    width: 100%;
+    height: 12em;
   }
 
   label {
@@ -51,14 +67,20 @@
   }
 
   #requestUrl {
-    width: 20em;
+    width: calc(100% - 8em);
   }
 
   #resultsBox {
     display: inline-block;
     padding: 0.5em;
     border-radius: 0.25em;
-    background: lightgray;
+  }
+
+  .ok {
+    background-color: greenyellow;
+  }
+  .error {
+    background-color: tomato;
   }
 </style>
 
@@ -66,9 +88,11 @@
 <script type='text/javascript'>
 
   const getValue = elementId => document.getElementById(elementId).value
-  const logMessage = (message, type) => {
-    message = typeof(obj) === 'object' ? JSON.stringify(message, null, 4) : message
+  const logMessage = (message, className) => {
+    console.log('log', message, className)
+    message = typeof(message) === 'object' ? JSON.stringify(message, null, 4) : message
     document.getElementById('resultsBox').innerHTML = message
+    document.getElementById('resultsBox').className = className
   }
 
   const restRequest = function (event, form) {
@@ -86,14 +110,15 @@
       }
     }
     
+    logMessage('Fetching...', '')
+
     fetch(getValue('requestUrl'), options)
       .then(res => res.json())
       .then(json => {
-        console.log(`json: "${json}"`, {json})
-        logMessage(json)
+        logMessage(json, 'ok')
       })
       .catch(err => {
-        logMessage(err, 'error')
+        logMessage(err.toString(), 'error')
       })
   }
 
