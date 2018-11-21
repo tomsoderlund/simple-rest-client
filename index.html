@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Simple REST Client</title>
+</head>
+<body>
+
+<h1>Simple REST Client</h1>
+
+<form onSubmit='restRequest(event, this)'>
+  <label>Type:
+    <select id='requestType'>
+      <option value='GET'>get</option>
+      <option value='POST'>create/post</option>
+      <option value='PUT'>update/put</option>
+      <option value='DELETE'>delete</option>
+    </select>
+  </label>
+  <label>URL:<input id='requestUrl'/></label>
+  <label>Body:<br/><textarea id='requestBody'></textarea></label>
+  <button type='submit'>Submit</button>
+</form>
+
+<p id='resultsBox'></p>
+
+<style type='text/css'>
+  body {
+    font-family: sans-serif;
+  }
+
+  button, input, textarea, select {
+    font-size: inherit;
+  }
+
+  button {
+    cursor: pointer;
+    padding: 0.5em 1em;
+    background-color: dodgerblue;
+    color: white;
+    border: none;
+    border-radius: 0.25em;
+  }
+
+  textarea {
+    height: 10em;
+  }
+
+  label {
+    display: block;
+    margin: 1em 0;
+  }
+
+  #requestUrl {
+    width: 20em;
+  }
+
+  #resultsBox {
+    display: inline-block;
+    padding: 0.5em;
+    border-radius: 0.25em;
+    background: lightgray;
+  }
+</style>
+
+
+<script type='text/javascript'>
+
+  const getValue = elementId => document.getElementById(elementId).value
+  const logMessage = (message, type) => {
+    message = typeof(obj) === 'object' ? JSON.stringify(message, null, 4) : message
+    document.getElementById('resultsBox').innerHTML = message
+  }
+
+  const restRequest = function (event, form) {
+    event.preventDefault()
+
+    let options
+    if (getValue('requestType') !== 'GET') {
+      options = {
+        method: getValue('requestType'),
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: getValue('requestBody')
+      }
+    }
+    
+    fetch(getValue('requestUrl'), options)
+      .then(res => res.json())
+      .then(json => {
+        console.log(`json: "${json}"`, {json})
+        logMessage(json)
+      })
+      .catch(err => {
+        logMessage(err, 'error')
+      })
+  }
+
+</script>
+
+</body>
+</html>
