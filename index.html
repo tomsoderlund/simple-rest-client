@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Simple REST Client</title>
+  <meta name='viewport' content='initial-scale=1.0, width=device-width' />
 </head>
 <body>
 
@@ -15,9 +16,9 @@
       <option value='PUT'>update/put</option>
       <option value='DELETE'>delete</option>
     </select>
-    <input id='requestUrl'/>
+    <input id='requestUrl' placeholder='https://myapi.com/path' />
   </label>
-  <label>Body:<br/><textarea id='requestBody'></textarea></label>
+  <label>Body:<br/><textarea id='requestBody' placeholder='JSON body'></textarea></label>
   <button type='submit'>Submit</button>
 </form>
 
@@ -40,11 +41,8 @@
     }
   }
 
-  button, input, textarea, select {
-    font-size: inherit;
-  }
-
   button {
+    font-size: inherit;
     cursor: pointer;
     padding: 0.7em 1.4em;
     background-color: dodgerblue;
@@ -56,9 +54,20 @@
     opacity: 0.8;
   }
 
+  input, textarea, select {
+    font-size: inherit;
+    padding: 0.5em;
+    border-radius: 0.2em;
+  }
+
   textarea {
-    width: 100%;
+    width: 90%;
     height: 12em;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: lightgray;
   }
 
   label {
@@ -67,7 +76,7 @@
   }
 
   #requestUrl {
-    width: calc(100% - 8em);
+    width: calc(100% - 10em);
   }
 
   #resultsBox {
