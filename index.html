@@ -19,6 +19,7 @@
     <input id='requestUrl' placeholder='https://myapi.com/path' />
   </label>
   <label>Body:<br/><textarea id='requestBody' placeholder='JSON body'></textarea></label>
+  <label>Headers:<br/><textarea id='requestHeaders' placeholder='JSON headers'></textarea></label>
   <button type='submit'>Submit</button>
 </form>
 
@@ -42,16 +43,21 @@
   }
 
   button {
+    position: relative;
     font-size: inherit;
     cursor: pointer;
-    padding: 0.7em 1.4em;
+    padding: 1em 2em;
     background-color: dodgerblue;
     color: white;
     border: none;
+    outline: none;
     border-radius: 0.25em;
   }
   button:hover {
     opacity: 0.8;
+  }
+  button:active {
+    top: 2px;
   }
 
   input, textarea, select {
@@ -62,7 +68,11 @@
 
   textarea {
     width: 90%;
-    height: 12em;
+    height: 6em;
+  }
+
+  #requestHeaders {
+    height: 3em;
   }
 
   input::placeholder,
@@ -107,16 +117,17 @@
   const restRequest = function (event, form) {
     event.preventDefault()
 
-    let options
+    const defaultHeaders = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
+
+    let options = {
+      method: getValue('requestType'),
+      headers: Object.assign({}, defaultHeaders, JSON.parse(getValue('requestHeaders') || '{}'))
+    }
     if (getValue('requestType') !== 'GET') {
-      options = {
-        method: getValue('requestType'),
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: getValue('requestBody')
-      }
+      options.body = getValue('requestBody')
     }
     
     logMessage('Fetching...', '')
